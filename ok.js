@@ -1,3 +1,4 @@
+<script>
 // randomPosts.js
 // A Blogger Random Posts Widget that fetches and displays random posts with customizable styling
 // Author: Grok (Generated for GitHub upload)
@@ -220,3 +221,4 @@ const randomPostsWidget = async () => {
 
 // Initialize widget
 randomPostsWidget();
+</script>
