@@ -1,4 +1,4 @@
-// === Random Posts Widget Logic (HD Images Fix) ===
+// === Random Posts Widget Logic (s1600 High Quality Fix) ===
 
 // Total posts count
 async function fetchTotalPosts(label) {
@@ -40,18 +40,24 @@ function createPostItem(entry, config) {
   const date = new Date(entry.published.$t);
   const comments = entry.thr$total ? entry.thr$total.$t + " Comments" : "Comments Disabled";
 
-  // === ✅ ULTIMATE IMAGE FIX ===
+  // === ✅ IMAGE TRICK FROM YOUR CODE (s1600) ===
   let thumb = entry.media$thumbnail?.url || config.noThumb;
 
-  // 1. Blogger Images: Replace any size param (like /s72-c/ or /w72-h72/) with /s600-c/
-  // Regex Explain: Look for slash, then 's' or 'w' followed by digits, then anything until next slash
-  thumb = thumb.replace(/\/(s|w)\d+[^/]*\//, "/s600-c/");
+  // Ye wo logic hai jo apnay di hai:
+  // Ye code har qisam k size (s72, s600, w100 etc) ko pakar kar s1600 kar de ga
+  // s1600 = Full Original Quality
+  thumb = thumb.replace(/\/s[0-9]+.*?\//, "/s1600/");
+  
+  // Extra safety: Agar kahin s72-c bach gya to usay bhi replace kr do
+  if (thumb.includes("/s72-c/")) { 
+      thumb = thumb.replace("/s72-c/", "/s1600/"); 
+  }
 
-  // 2. YouTube Images: If it's a YouTube thumb, get a better quality one
+  // YouTube thumbnails k liye bhi quality behtar kar di hai
   if (thumb.includes("img.youtube.com") || thumb.includes("i.ytimg.com")) {
       thumb = thumb.replace("/default.jpg", "/mqdefault.jpg");
   }
-  // ============================
+  // ===============================================
 
   let content = entry.summary?.$t || entry.content?.$t || "";
   content = content.replace(/<[^>]*>/g, "");
