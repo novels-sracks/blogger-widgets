@@ -1,4 +1,4 @@
-// === Random Posts Widget Logic ===
+// === Random Posts Widget Logic (HD Images Fix) ===
 
 // Total posts count
 async function fetchTotalPosts(label) {
@@ -9,14 +9,11 @@ async function fetchTotalPosts(label) {
 
 // Fetch posts (filter drafts)
 async function fetchPosts(label, total) {
-  const maxResults = Math.min(total, 50); // Max 50
+  const maxResults = Math.min(total, 50);
   const res = await fetch(`/feeds/posts/summary/-/${encodeURIComponent(label)}?alt=json&max-results=${maxResults}`);
   const data = await res.json();
   let posts = data.feed.entry || [];
-
-  // Remove drafts
-  posts = posts.filter(entry => !entry.app$control);
-
+  posts = posts.filter(entry => !entry.app$control); // Remove drafts
   return posts;
 }
 
@@ -37,18 +34,24 @@ function createPostItem(entry, config) {
   let linkObj = entry.link.find(l => l.rel === "alternate") || entry.link.find(l => l.rel === "self");
   let link = linkObj ? linkObj.href : "#";
 
-  // Force https & Clean Link
-  if (link.startsWith("http://")) {
-    link = link.replace("http://", "https://");
-  }
+  if (link.startsWith("http://")) link = link.replace("http://", "https://");
   link = link.split("#")[0];
 
   const date = new Date(entry.published.$t);
   const comments = entry.thr$total ? entry.thr$total.$t + " Comments" : "Comments Disabled";
 
-  // ✅ FIX: Forces high quality & smart crop (600x600)
-  // This logic handles both /s72-c/ and /s72/ or any other size
-  const thumb = entry.media$thumbnail?.url?.replace(/\/s\d+(-c)?\//, "/w600-h600-c/") || config.noThumb;
+  // === ✅ ULTIMATE IMAGE FIX ===
+  let thumb = entry.media$thumbnail?.url || config.noThumb;
+
+  // 1. Blogger Images: Replace any size param (like /s72-c/ or /w72-h72/) with /s600-c/
+  // Regex Explain: Look for slash, then 's' or 'w' followed by digits, then anything until next slash
+  thumb = thumb.replace(/\/(s|w)\d+[^/]*\//, "/s600-c/");
+
+  // 2. YouTube Images: If it's a YouTube thumb, get a better quality one
+  if (thumb.includes("img.youtube.com") || thumb.includes("i.ytimg.com")) {
+      thumb = thumb.replace("/default.jpg", "/mqdefault.jpg");
+  }
+  // ============================
 
   let content = entry.summary?.$t || entry.content?.$t || "";
   content = content.replace(/<[^>]*>/g, "");
