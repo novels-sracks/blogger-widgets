@@ -1,5 +1,5 @@
 <style>
-/* === CSS STYLES (Fixed for Layout) === */
+/* === UPDATED CSS FOR SIDEBAR === */
 .random-posts {
   list-style: none;
   padding: 0;
@@ -8,65 +8,70 @@
 
 .random-posts li {
   display: flex;
-  gap: 10px;
-  margin-bottom: 14px;
-  border-bottom: 2px solid #eee;
+  align-items: flex-start; /* Image aur text ko top se start karega */
+  gap: 12px;               /* Image aur text ke darmiyan gap */
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee; /* Halka border */
   padding-bottom: 10px;
-  transition: transform 0.2s ease-in-out;
-}
-
-.random-posts li:hover {
-  transform: translateX(3px);
 }
 
 .random-posts img {
-  border-radius: 8px;
+  border-radius: 6px;
   
-  /* --- SIZE FIX START --- */
-  width: 150px;       /* Aapki set ki hui width */
-  min-width: 150px;   /* ✅ ZARURI: Ye image ko chota honay se rokega */
-  height: 100px;      /* Aapki set ki hui height */
-  flex-shrink: 0;     /* ✅ ZARURI: Text image ko dhakka nahi de payega */
-  /* --- SIZE FIX END --- */
+  /* === BOOK COVER SIZE FIX === */
+  width: 75px;        /* Width kam ki hai taake text ki jagah banay */
+  min-width: 75px;    /* Image pichkay gi nahi */
+  height: 115px;      /* Lambai (Height) zyada rakhi hai Books ke liye */
+  flex-shrink: 0;     /* Flexbox safety */
+  /* =========================== */
   
-  object-fit: cover;  /* Image crop hogi magar khinchay gi nahi */
+  object-fit: cover;  /* Image crop ho kar fit hogi */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Thora sa shadow taake pyara lagay */
   background-color: #f5f5f5;
-  padding: 3px;
   transition: opacity 0.3s;
 }
 
 .random-posts img:hover {
-  opacity: 0.7;
+  opacity: 0.8;
+}
+
+/* Text Container */
+.random-posts div {
+  flex: 1;       /* Baki bachi hui saari jagah text le ga */
+  min-width: 0;  /* Text overflow issue fix */
 }
 
 .random-posts a {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  font-weight: bold;
-  text-transform: capitalize;
+  font-family: Arial, sans-serif;
+  font-size: 15px;     /* Font size sidebar ke hisaab se adjust kiya */
+  font-weight: 700;
   color: #222;
   text-decoration: none;
-  line-height: 1.3;
-  display: inline-block;
+  line-height: 1.4;
+  display: block;      /* Block kiya taake lines mein break ho */
   margin-bottom: 4px;
 }
 
 .random-posts a:hover {
-  color: #0077cc;
+  color: #d32f2f; /* Hover par red color (Optional) */
 }
 
 .random-summary {
-  font-size: 14px;
-  color: #555;
-  margin-top: 3px;
-  font-family: "Times New Roman", Times, serif;
-  line-height: 1.8;
+  font-size: 13px;
+  color: #666;
+  margin-top: 4px;
+  line-height: 1.5;
+  
+  /* Text ko 3 lines tak limit karne ke liye (Optional) */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .random-info {
   font-size: 11px;
   color: #999;
-  margin-top: 2px;
-  font-family: "Times New Roman", Times, serif;
+  margin-bottom: 2px;
 }
 </style>
