@@ -1,3 +1,5 @@
+<style>
+/* === CSS STYLES (Fixed for Layout) === */
 .random-posts {
   list-style: none;
   padding: 0;
@@ -19,9 +21,15 @@
 
 .random-posts img {
   border-radius: 8px;
-  width: 150px;
-  height: 100px;
-  object-fit: cover;
+  
+  /* --- SIZE FIX START --- */
+  width: 150px;       /* Aapki set ki hui width */
+  min-width: 150px;   /* ✅ ZARURI: Ye image ko chota honay se rokega */
+  height: 100px;      /* Aapki set ki hui height */
+  flex-shrink: 0;     /* ✅ ZARURI: Text image ko dhakka nahi de payega */
+  /* --- SIZE FIX END --- */
+  
+  object-fit: cover;  /* Image crop hogi magar khinchay gi nahi */
   background-color: #f5f5f5;
   padding: 3px;
   transition: opacity 0.3s;
@@ -61,3 +69,4 @@
   margin-top: 2px;
   font-family: "Times New Roman", Times, serif;
 }
+</style>
