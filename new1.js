@@ -1,4 +1,4 @@
-// === Random Posts Widget Logic (Fixed for w/h/s sizes) ===
+// === Random Posts Widget Logic (FINAL FIXED) ===
 
 // 1. Fetch Total Posts
 async function fetchTotalPosts(label) {
@@ -38,7 +38,10 @@ function createPostItem(entry, config) {
 
   const date = new Date(entry.published.$t);
   
-  // === ✅ MAIN IMAGE FIX FOR YOUR URL TYPE ===
+  // --- YE LINE MISSING THI, ADD KAR DI HAI ---
+  const comments = entry.thr$total ? entry.thr$total.$t + " Comments" : "Comments Disabled";
+  
+  // === ✅ MAIN IMAGE FIX ===
   let thumb = config.noThumb;
   
   if (entry.media$thumbnail && entry.media$thumbnail.url) {
@@ -50,16 +53,9 @@ function createPostItem(entry, config) {
     } 
     // 2. Blogger Image Fix (Handles w640-h426, s72-c, s1600, etc.)
     else {
-        // Regex Explanation:
-        // \/  -> Shuru ka slash
-        // (s|w|h) -> Ya 's' ho, ya 'w' ho, ya 'h' ho
-        // \d+ -> Uske baad numbers hon
-        // [^/]* -> Uske baad kuch bhi ho jab tak agla slash na aye (ye -h426 ko pakar le ga)
-        // \/ -> Aakhir ka slash
         thumb = thumb.replace(/\/(s|w|h)\d+[^/]*\//, "/s1600/");
     }
   }
-  // ============================================
 
   let content = entry.summary?.$t || entry.content?.$t || "";
   content = content.replace(/<[^>]*>/g, "");
@@ -81,14 +77,14 @@ function createPostItem(entry, config) {
   return li;
 }
 
-// 5. Lazy Load
+// 5. Lazy Load (With Safety Fallback)
 function lazyLoadImages() {
   const images = document.querySelectorAll("img.lazy-thumb");
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const img = entry.target;
-        // Safety Fallback: Agar s1600 load na ho to w600 try kro
+        // Fallback: Agar s1600 fail ho to w600 try kare
         img.onerror = function() {
             this.onerror = null;
             this.src = this.src.replace("/s1600/", "/w600/"); 
